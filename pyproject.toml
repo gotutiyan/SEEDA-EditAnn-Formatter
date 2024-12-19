@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "seeda_formatter"
+version = "0.0.1"
+authors = [
+    {name = "Takumi Goto"},
+]
+description = "Scripts for easy handling of SEEDA edit-level annotations."
+license = {file = "LICENSE"}
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+]
+
+[tool.setuptools.packages.find]
+include = ["seeda_formatter*"]
+namespaces = false
