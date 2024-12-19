@@ -30,7 +30,6 @@ class SEEDAFormatterBase(abc.ABC):
         annotator_id = self.config.annotator
         paths = glob.glob(f'{base_path}/annotator{annotator_id}/*.txt')
         paths = sorted(paths)
-        print([p.split('/')[-1] for p in paths])
         data = []
         for path in paths:
             data.append(self.load_a_file(path))

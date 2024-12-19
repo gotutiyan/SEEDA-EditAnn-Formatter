@@ -6,7 +6,7 @@ Scripts for easy handling of SEEDA edit-level annotations
 Download the official data.
 ```sh
 pip install git+https://github.com/gotutiyan/SEEDA-EditAnn-Formatter
-https://github.com/tmu-nlp/SEEDA.git
+git clone https://github.com/tmu-nlp/SEEDA.git
 ```
 
 Use out API.
