@@ -32,12 +32,12 @@ class SEEDAFormatterBase(abc.ABC):
         paths = sorted(paths)
         data = []
         for path in paths:
-            data.append(self.load_a_file(path))
+            content = open(path).read().rstrip().split('\n')
+            data.append(self.load_an_example(content, path))
         return data
             
-    def load_a_file(self, path):
+    def load_an_example(self, content, path):
         _id = path.split('/')[-1].replace('.txt',  '')
-        content = open(path).read().rstrip().split('\n')
         pattern = re.compile(r'\[(.*?)\]')
         data = {'id': int(_id)}
         data['previous'] = content[1]
@@ -64,6 +64,7 @@ class SEEDAFormatterBase(abc.ABC):
             # [4:-5] is to remove <s*> and </s*> 
             c = c[4:-5]
             edits = []
+            offset = 0
             for match in pattern.finditer(c):
                 d = dict()
                 content = match.group(1)
@@ -83,12 +84,18 @@ class SEEDAFormatterBase(abc.ABC):
                 d['o_str'] = o_str
                 d['c_str'] = c_str
                 before_phrase_text = c[:match.start()]
-                start_index = len(before_phrase_text.split())
+                start_index = len(before_phrase_text.split()) + offset
                 phrase_word_count = len(o_str.split())
                 end_index = start_index + phrase_word_count
                 d['o_start'] = start_index
                 d['o_end'] = end_index
                 edits.append(self.Edit(**d))
+
+                if o_str == "":
+                    # insert edit
+                    offset -= len(c_str.split(' '))
+                else:
+                    offset -= len(c_str.split()) - 1
             data['edits'].append(edits)
         assert len(data['edits']) == len(corrections)
         return data
