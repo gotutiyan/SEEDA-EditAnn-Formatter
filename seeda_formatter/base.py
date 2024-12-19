@@ -33,7 +33,9 @@ class SEEDAFormatterBase(abc.ABC):
         data = []
         for path in paths:
             content = open(path).read().rstrip().split('\n')
-            data.append(self.load_an_example(content, path))
+            d = self.load_an_example(content, path)
+            if d != -1:
+                data.append(d)
         return data
             
     def load_an_example(self, content, path):
@@ -65,20 +67,25 @@ class SEEDAFormatterBase(abc.ABC):
             c = c[4:-5]
             edits = []
             offset = 0
+            ignore = False
             for match in pattern.finditer(c):
                 d = dict()
                 content = match.group(1)
                 try:
                     edit, is_correct = content.split('|')
                 except ValueError:
+                    # If it includes an invalid format, ignore this sentence
                     print(_id, content)
                     print("Error in content.split('|')", f'{_id=}', f'{content=}')
+                    ignore = True
                     continue
                 is_correct = True if is_correct == 'True' else False
                 try:
                     o_str, c_str = edit.split('→')
                 except ValueError:
+                    # If it includes an invalid format, ignore this sentence
                     print('Error in edit.split(→)', f'{_id=}', f'{edit=}')
+                    ignore = True
                     continue
                 d['is_correct'] = is_correct
                 d['o_str'] = o_str
@@ -96,8 +103,8 @@ class SEEDAFormatterBase(abc.ABC):
                     offset -= len(c_str.split(' '))
                 else:
                     offset -= len(c_str.split()) - 1
-            data['edits'].append(edits)
-        assert len(data['edits']) == len(corrections)
+            if not ignore:
+                data['edits'].append(edits)
         return data
     
     # def save(self, path, **args):
