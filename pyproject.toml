@@ -1,20 +1,18 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "seeda_formatter"
-version = "0.0.1"
-authors = [
-    {name = "Takumi Goto"},
-]
+version = "0.1.0"
 description = "Scripts for easy handling of SEEDA edit-level annotations."
-license = {file = "LICENSE"}
 readme = "README.md"
-requires-python = ">=3.9"
-dependencies = [
+authors = [
+    { name = "gotuiyan" }
 ]
+requires-python = ">=3.11.0"
+dependencies = []
 
-[tool.setuptools.packages.find]
-include = ["seeda_formatter*"]
-namespaces = false
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pyte
